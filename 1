@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Секундомер</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background-color: lightgray;
+        text-align: center;
+        font-size: 2em;
+      }
+      
+      button {
+        background-color: lightgreen;
+        font-size: 1.5em;
+        border-radius: 10px;
+      }
+      
+      input[type="number"] {
+        width: 4em;
+        font-size: 2em;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;">
+      <label for="volume">Объем:</label>
+      <input type="number" id="volume" name="volume" value="5" maxlength="2"><br><br>
+      <button id="start" onclick="startStop()">Старт</button>
+      <br><br>
+      <div id="timer">00:00</div>
+      <br>
+      <div id="result"></div>
+    </div>
+    <script>
+      let startTime;
+      let timerId;
+
+      function startStop() {
+        const button = document.getElementById("start");
+        const volume = document.getElementById("volume").value;
+        const timer = document.getElementById("timer");
+        const result = document.getElementById("result");
+
+        if (button.textContent === "Старт") {
+          button.textContent = "Стоп";
+          startTime = Date.now();
+          timerId = setInterval(() => {
+            const elapsedTime = Date.now() - startTime;
+            const minutes = Math.floor(elapsedTime / 60000);
+            const seconds = Math.floor((elapsedTime % 60000) / 1000);
+            timer.textContent = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+          }, 1000);
+        } else {
+          button.textContent = "Старт";
+          clearInterval(timerId);
+          const elapsedMinutes = (Date.now() - startTime) / 60000;
+          const calculatedVolume = volume * 60 / elapsedMinutes;
+          result.textContent = `Дебит скважины: ${calculatedVolume.toFixed(2)} Лит/Час`;
+        }
+      }
+    </script>
+  </body>
+</html>
